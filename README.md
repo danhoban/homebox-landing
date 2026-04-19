@@ -27,11 +27,29 @@ Tag→template mapping is fully configurable. You can add your own templates by 
 
 ## Requirements
 
-- Python 3.9+
-- nginx (for TLS termination and internal/external routing)
+- Docker, or Python 3.9+
+- A reverse proxy handling TLS (nginx, Caddy, Traefik, etc.)
 - A running Homebox instance
 
 ## Installation
+
+### Docker (recommended)
+
+```bash
+# Pull the image
+docker pull ghcr.io/danhoban/homebox-landing:latest
+
+# Create your config
+cp .env.example .env
+# Edit .env with your Homebox credentials and contact details
+
+# Run with docker compose (see docs/docker-compose.yml)
+docker compose -f docs/docker-compose.yml up -d
+```
+
+A sample [`docs/docker-compose.yml`](docs/docker-compose.yml) is provided. It binds the server to `127.0.0.1:8080` and mounts your `.env` file into the container.
+
+### From source
 
 ```bash
 git clone https://github.com/danhoban/homebox-landing.git
@@ -39,6 +57,7 @@ cd homebox-landing
 pip install -r requirements.txt
 cp .env.example .env
 # Edit .env with your Homebox credentials and contact details
+python -m app.main
 ```
 
 ## Configuration
@@ -58,29 +77,13 @@ All configuration is in `.env`. Copy `.env.example` to get started. Key settings
 
 See `.env.example` for full documentation and examples.
 
-## Running
+## Docker image
 
-```bash
-python -m app.main
+The image is published to GHCR on every push to `main` and tagged `latest` plus the short commit SHA:
+
 ```
-
-For production, run via systemd:
-
-```ini
-[Unit]
-Description=Homebox public landing page
-After=network.target
-
-[Service]
-Type=simple
-User=www-data
-WorkingDirectory=/opt/homebox-landing
-ExecStart=/usr/bin/python3 -m app.main
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
+ghcr.io/danhoban/homebox-landing:latest
+ghcr.io/danhoban/homebox-landing:sha-<commit>
 ```
 
 ## Reverse Proxy Integration
