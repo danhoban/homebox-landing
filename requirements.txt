@@ -1,0 +1,4 @@
+apprise
+markdown
+python-dotenv
+requests

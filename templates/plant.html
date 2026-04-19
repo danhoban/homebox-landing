@@ -1,0 +1,24 @@
+<div class="card">
+  ${hero_html}
+  <div class="section">
+    ${tags_html}
+    <div class="latin-name">${latin_name}</div>
+    <h1>${item_name}</h1>
+    <div class="description">${description}</div>
+  </div>
+  ${fields_section_html}
+  ${care_section_html}
+  <div class="divider"></div>
+  <div class="section">
+    <button class="reveal-btn" id="reveal-btn" onclick="
+      document.getElementById('contact-section').style.display='block';
+      this.style.display='none';
+    ">Get in touch</button>
+    <div id="contact-section" style="display:none">
+      <div class="section-label">Contact</div>
+      <div class="contact-list">
+        ${contact_links}
+      </div>
+    </div>
+  </div>
+</div>
