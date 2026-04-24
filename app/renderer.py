@@ -112,15 +112,6 @@ def _render_markdown(text: str) -> str:
     return _md_renderer.convert(text)
 
 
-def _owner_notified_badge() -> str:
-    return (
-        '<div class="notify-badge">'
-        '<span class="notify-dot"></span>'
-        'Owner notified'
-        '</div>'
-    )
-
-
 def render(template_name: str, context: dict[str, Any], contacts: list[dict]) -> str:
     contact_links_html = "\n".join(render_contact_link(c) for c in contacts)
 
@@ -185,7 +176,6 @@ def build_plant_context(item: dict) -> dict:
         "hero_html": hero_html,
         "fields_section_html": fields_section_html,
         "care_section_html": care_section_html,
-        "owner_notified_badge": "",
     }
 
 
@@ -195,19 +185,16 @@ def build_item_context(item: dict, asset_id: str = "") -> dict:
         "item_name": html.escape(item.get("name", "")),
         "description": html.escape(item.get("description") or ""),
         "asset_id": html.escape(asset_id),
-        "owner_notified_badge": _owner_notified_badge(),
     }
 
 
 def build_fallback_context() -> dict:
     return {
         "page_title": "Get in touch",
-        "owner_notified_badge": "",
     }
 
 
 def build_not_found_context() -> dict:
     return {
         "page_title": "Not found",
-        "owner_notified_badge": "",
     }
