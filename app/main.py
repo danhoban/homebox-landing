@@ -171,23 +171,23 @@ class LandingHandler(BaseHTTPRequestHandler):
 
         contacts = _config.get("contacts", [])
 
+        not_found_contacts = [c for c in contacts if c["type"] == "email"][:1]
+
         if not asset_id or not _ASSET_ID_RE.match(asset_id):
-            html = renderer.render("not_found.html", renderer.build_not_found_context(), contacts)
-            self._send_html(200, html)
-            return 200
+            html = renderer.render("not_found.html", renderer.build_not_found_context(), not_found_contacts)
+            self._send_html(404, html)
+            return 404
 
         try:
             item = _homebox.get_item_by_asset_id(asset_id)
         except Exception:
-            log.exception("Homebox API error for asset %s", asset_id)
-            html = renderer.render("fallback.html", renderer.build_fallback_context(), contacts)
-            self._send_html(200, html)
-            return 200
+            log.exception("Homebox lookup failed for asset %s", asset_id)
+            item = None
 
         if item is None:
-            html = renderer.render("not_found.html", renderer.build_not_found_context(), contacts)
-            self._send_html(200, html)
-            return 200
+            html = renderer.render("not_found.html", renderer.build_not_found_context(), not_found_contacts)
+            self._send_html(404, html)
+            return 404
 
         tag_templates = _config.get("tag_templates", {"_default": {"file": "item.html", "notify": []}})
         tpl_entry = _resolve_template(item.get("tags") or [], tag_templates)

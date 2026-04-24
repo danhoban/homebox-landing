@@ -67,16 +67,15 @@ class HomeboxClient:
     def get_item_by_asset_id(self, asset_id: str) -> dict | None:
         log.info("Asset lookup: GET /api/v1/assets/%s", asset_id)
         resp = self._get(f"/api/v1/assets/{asset_id}")
-        if 400 <= resp.status_code < 500:
+        if not resp.ok:
             return None
-        resp.raise_for_status()
         data = resp.json()
         items = data.get("items") or []
         log.info("Asset lookup returned %d item(s)", len(items))
         if not items:
             return None
         if len(items) > 1:
-            raise ValueError(f"Asset ID {asset_id!r} matched {len(items)} items — expected exactly 1")
+            log.warning("Asset ID %r matched %d items — using first", asset_id, len(items))
         item = items[0]
         log.info("Matched item: %s (id=%s)", item.get("name"), item.get("id"))
         return self.get_item(item["id"])
