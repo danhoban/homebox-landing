@@ -67,7 +67,7 @@ class HomeboxClient:
     def get_item_by_asset_id(self, asset_id: str) -> dict | None:
         log.info("Asset lookup: GET /api/v1/assets/%s", asset_id)
         resp = self._get(f"/api/v1/assets/{asset_id}")
-        if resp.status_code == 404:
+        if 400 <= resp.status_code < 500:
             return None
         resp.raise_for_status()
         data = resp.json()
