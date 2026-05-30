@@ -194,12 +194,20 @@ class LandingHandler(BaseHTTPRequestHandler):
         template_name = tpl_entry["file"]
         notif_urls = tpl_entry["notify"]
         item_name = item.get("name", "unknown item")
+        item_description = item.get("description", "")
+
+        xff = self.headers.get("X-Forwarded-For", "")
+        ip = xff.split(",")[0].strip() if xff else (self.headers.get("X-Real-IP") or self.client_address[0])
 
         _default_titles = {"plant.html": "🌿 Plant scanned"}
-        _default_bodies = {"plant.html": "{name} was scanned by a visitor"}
+        _default_bodies = {"plant.html": "{name} was scanned by a visitor from {ip}"}
         title_tpl = tpl_entry.get("notify_title") or _default_titles.get(template_name, "📦 Lost item found")
-        body_tpl = tpl_entry.get("notify_body") or _default_bodies.get(template_name, "{name} was scanned outside your network")
-        notifier.notify(notif_urls, title_tpl.format(name=item_name), body_tpl.format(name=item_name))
+        body_tpl = tpl_entry.get("notify_body") or _default_bodies.get(template_name, "{name} was scanned from {ip}")
+        notifier.notify(
+            notif_urls,
+            title_tpl.format(name=item_name, ip=ip, description=item_description),
+            body_tpl.format(name=item_name, ip=ip, description=item_description),
+        )
         log.info("Notification fired for %s (%d url(s))", item_name, len(notif_urls))
 
         if template_name == "plant.html":

@@ -71,7 +71,7 @@ All configuration is in `.env`. Copy `.env.example` to get started. Key settings
 | `TEMPLATE_DEFAULT` | Fallback template filename |
 | `TEMPLATE_N_TAG` / `TEMPLATE_N_FILE` | Tag→template mapping (numbered from 1) |
 | `TEMPLATE_N_NOTIFY` | Apprise notification URLs for this template (comma-separated) |
-| `TEMPLATE_N_NOTIFY_TITLE` / `TEMPLATE_N_NOTIFY_BODY` | Optional custom notification text; supports `{name}` token |
+| `TEMPLATE_N_NOTIFY_TITLE` / `TEMPLATE_N_NOTIFY_BODY` | Optional custom notification text; supports `{name}`, `{ip}`, `{description}` tokens |
 | `CONTACT_N_TYPE` / `CONTACT_N_LABEL` / `CONTACT_N_VALUE` | Public contact details (numbered from 1) |
 | `SERVER_HOST` / `SERVER_PORT` | Bind address (default `127.0.0.1:8080`) |
 
@@ -102,6 +102,19 @@ A sample nginx configuration is provided in [`docs/nginx.conf`](docs/nginx.conf)
 ## Notifications
 
 Notifications are powered by [Apprise](https://github.com/caronc/apprise), which supports 80+ services including Home Assistant webhooks, Ntfy, Pushover, Slack, and more. Configure notification URLs per template in `.env`.
+
+The notification title and body are plain strings with optional substitution tokens:
+
+| Token | Value |
+|---|---|
+| `{name}` | Item name from Homebox |
+| `{ip}` | Client IP address (reads `X-Forwarded-For` / `X-Real-IP` from your reverse proxy, falls back to the raw socket address) |
+| `{description}` | Item description from Homebox (empty string if not set) |
+
+Example:
+```
+TEMPLATE_DEFAULT_NOTIFY_BODY={name} was scanned from {ip} — {description}
+```
 
 ## Licence
 

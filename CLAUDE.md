@@ -44,7 +44,7 @@ All config lives in `.env` (loaded via `python-dotenv`). See `.env.example` for 
 - `CONTACT_N_TYPE` / `CONTACT_N_LABEL` / `CONTACT_N_VALUE` — public contact details
 - `SERVER_HOST` / `SERVER_PORT` / `LOG_LEVEL`
 
-Notification title/body support `{name}` as a substitution token for the item name.
+Notification title/body support three substitution tokens: `{name}` (item name), `{ip}` (client IP, resolved from `X-Forwarded-For` / `X-Real-IP` proxy headers with fallback to the raw socket address), and `{description}` (item description from Homebox).
 
 ## Key constraints
 
