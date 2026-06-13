@@ -83,8 +83,7 @@ def _load_config(env_path: str) -> dict:
     return {
         "homebox": {
             "url": os.environ["HOMEBOX_URL"],
-            "username": os.environ["HOMEBOX_USERNAME"],
-            "password": os.environ["HOMEBOX_PASSWORD"],
+            "api_key": os.environ["HOMEBOX_API_KEY"],
         },
         "tag_templates": _parse_tag_templates(),
         "contacts": _parse_contacts(),
@@ -264,8 +263,7 @@ def main():
     hb_cfg = _config["homebox"]
     _homebox = hb_module.HomeboxClient(
         url=hb_cfg["url"],
-        username=hb_cfg["username"],
-        password=hb_cfg["password"],
+        api_key=hb_cfg["api_key"],
     )
 
     srv_cfg = _config.get("server", {})

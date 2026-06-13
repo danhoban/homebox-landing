@@ -23,7 +23,7 @@ This is a stdlib-only Python HTTP server (`http.server.ThreadingHTTPServer`) —
 
 **Request flow:**
 1. `main.py` receives `GET /landing?ref=/a/{asset_id}`
-2. `homebox.py` calls `GET /api/v1/assets/{asset_id}` to resolve asset → UUID, then `GET /api/v1/items/{uuid}` for full detail
+2. `homebox.py` calls `GET /api/v1/assets/{asset_id}` to resolve asset → UUID, then `GET /api/v1/entities/{uuid}` for full detail
 3. Item tags are matched against `TEMPLATE_N_TAG` config to select a template
 4. `notifier.py` fires the matched template's Apprise URLs in a background thread
 5. `renderer.py` builds a context dict and renders via `string.Template` (not Jinja2)
@@ -39,7 +39,7 @@ This is a stdlib-only Python HTTP server (`http.server.ThreadingHTTPServer`) —
 
 All config lives in `.env` (loaded via `python-dotenv`). See `.env.example` for the full schema. Key structure:
 
-- `HOMEBOX_*` — connection credentials
+- `HOMEBOX_URL` / `HOMEBOX_API_KEY` — connection config (generate the key in Homebox → Settings → API Keys)
 - `TEMPLATE_DEFAULT` / `TEMPLATE_N_TAG` / `TEMPLATE_N_FILE` / `TEMPLATE_N_NOTIFY` / `TEMPLATE_N_NOTIFY_TITLE` / `TEMPLATE_N_NOTIFY_BODY` — tag→template mapping with per-template Apprise notification config; templates are matched in order 1…N, first match wins
 - `CONTACT_N_TYPE` / `CONTACT_N_LABEL` / `CONTACT_N_VALUE` — public contact details
 - `SERVER_HOST` / `SERVER_PORT` / `LOG_LEVEL`

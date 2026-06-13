@@ -9,7 +9,7 @@ Internal network traffic continues to reach Homebox directly, unchanged.
 Your reverse proxy detects external visitors and redirects them from `/a/{asset_id}` to `/landing?ref=/a/{asset_id}`. The Python server handles that request by:
 
 1. Looking up the asset in Homebox via `GET /api/v1/assets/{asset_id}`
-2. Fetching full item detail via `GET /api/v1/items/{uuid}`
+2. Fetching full item detail via `GET /api/v1/entities/{uuid}`
 3. Matching the item's tags against your configured tag→template mappings
 4. Firing an Apprise notification in a background thread
 5. Rendering and returning an HTML page
@@ -41,7 +41,7 @@ docker pull ghcr.io/danhoban/homebox-landing:latest
 
 # Create your config
 cp .env.example .env
-# Edit .env with your Homebox credentials and contact details
+# Edit .env with your Homebox API key and contact details
 
 # Run with docker compose (see docs/docker-compose.yml)
 docker compose -f docs/docker-compose.yml up -d
@@ -56,7 +56,7 @@ git clone https://github.com/danhoban/homebox-landing.git
 cd homebox-landing
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env with your Homebox credentials and contact details
+# Edit .env with your Homebox API key and contact details
 python -m app.main
 ```
 
@@ -67,7 +67,7 @@ All configuration is in `.env`. Copy `.env.example` to get started. Key settings
 | Variable | Description |
 |---|---|
 | `HOMEBOX_URL` | Internal or external Homebox URL |
-| `HOMEBOX_USERNAME` / `HOMEBOX_PASSWORD` | Homebox credentials |
+| `HOMEBOX_API_KEY` | Homebox API key (generate in Homebox → Settings → API Keys) |
 | `TEMPLATE_DEFAULT` | Fallback template filename |
 | `TEMPLATE_N_TAG` / `TEMPLATE_N_FILE` | Tag→template mapping (numbered from 1) |
 | `TEMPLATE_N_NOTIFY` | Apprise notification URLs for this template (comma-separated) |
